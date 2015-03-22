@@ -16,9 +16,12 @@ typedef struct map {
 } map_t;
 
 map_t *map_read(map_t *map, const char *path);
+void map_draw(map_t *map);
 bool polygon_cast_ray(	map_t *map,
 			double x, double y,
 			double dx, double dy,
 			point_t *cull_list, size_t cull_n,
 			double *hitx_out, double *hity_out,
 			point_t *p1_out, point_t *p2_out);
+
+double dot2d(double x1, double y1, double x2, double y2);

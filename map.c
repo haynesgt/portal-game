@@ -1,7 +1,8 @@
+#include <GL/gl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "polygon.h"
+#include "map.h"
 #include "debug.h"
 
 #define DEF_LINK(x, name) \
@@ -121,12 +122,9 @@ map_t *map_read(map_t *map, const char *path) {
 	return map;
 }
 
-double dot2d(	double x1, double y1,
-			double x2, double y2) {
+double dot2d(double x1, double y1, double x2, double y2) {
 	return x1*x2+y1*y2;
 }
-
-#include <GL/gl.h>
 
 bool polygon_cast_ray(	map_t *map,
 			double x, double y,
@@ -143,7 +141,6 @@ bool polygon_cast_ray(	map_t *map,
 	if (p1_out == NULL) p1_out = &dummyp;
 	if (p2_out == NULL) p2_out = &dummyp;
 	dsqr_min = 1.0/0.0;
-	glBegin(GL_LINES);
 	for (i = 0; i < map->polygon_n; i++) {
 		polygon_t *polygon;
 		polygon = &map->polygons[i];
@@ -164,9 +161,6 @@ bool polygon_cast_ray(	map_t *map,
 				}
 			}
 			if (cull) continue;
-			glColor3d(1, 0, 0);
-			glVertex2d(p1->x, p1->y);
-			glVertex2d(p2->x, p2->y);
 			// Check if the source is pointing against the wall
 			d = dot2d(dx, dy, -(p2->y-p1->y), (p2->x-p1->x));
 			if (d > 0) continue;
@@ -194,21 +188,34 @@ bool polygon_cast_ray(	map_t *map,
 				*p2_out = *p2;
 				dsqr_min = dsqr;
 			}
-			glColor3d(0, 1.0, 1.0);
-			glVertex2d(ix - 4, iy);
-			glVertex2d(ix+4, iy);
-			glColor3d(0, 0, 1.0);
+		}
+	}
+	if (dsqr_min < 1.0/0.0) {
+		return 1;
+	} else {
+		*hitx_out = x + dx * 1000;
+		*hity_out = y + dy * 1000;
+		return 0;
+	}
+}
+
+void map_draw(map_t *map) {
+	size_t i, j;
+	for (i = 0; i < map->polygon_n; i++) {
+		polygon_t *polygon;
+		polygon = &map->polygons[i];
+		if (polygon->point_n >= 3) glBegin(GL_TRIANGLE_FAN);
+		else if (polygon->point_n == 2) glBegin(GL_LINES);
+		else glBegin(GL_POINTS);
+		for (j = 0; j < polygon->point_n; j++) {
+			point_t *p1, *p2;
+			p1 = &polygon->points[j];
+			p2 = &polygon->points[(j+1)%polygon->point_n];
 			glVertex2d(p1->x, p1->y);
 			glVertex2d(p2->x, p2->y);
 		}
+		glEnd();
 	}
-	glColor3d(0, 0, 1.0);
-	glVertex2d(x-10, y);
-	glVertex2d(x+10, y);
-	glVertex2d(x, y-10);
-	glVertex2d(x, y+10);
-	glEnd();
-	return dsqr_min < 1.0/0.0;
 }
 
 #if 0

@@ -1,4 +1,6 @@
 #pragma once
 
-#define DEBUG(level, s, args...) \
-	if (level <= 5) fprintf(stderr, s, args)
+#define DEBUG_LEVEL 5
+
+#define DEBUG(level, s, ...) \
+	if (level <= DEBUG_LEVEL) fprintf(stderr, s, ##__VA_ARGS__)

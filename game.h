@@ -9,15 +9,18 @@
 
 #include "colors.h"
 
+typedef struct game game_t;
+
 typedef struct game {
 	int width;
 	int height;
 	char *window_name;
-	void (*update_callback)(void) ;
-	void (*draw_callback)(void) ;
+	void (*update_callback)(game_t *game) ;
+	void (*draw_callback)(game_t *game) ;
 	bool disable_cursor;
 
 	GLFWwindow *window;
+	void *user_data;
 } game_t;
 
 extern char keys[256];
@@ -30,6 +33,7 @@ int key(char c);
 
 int get_mouse_x(void);
 int get_mouse_y(void);
+int get_mouse_button(game_t *game, int button);
 double sign(double x);
 double norm2d(double x, double y);
 

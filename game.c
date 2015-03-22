@@ -13,6 +13,7 @@ int mouse_x, mouse_y;
 
 int get_mouse_x(void) { return mouse_x; }
 int get_mouse_y(void) { return mouse_y; }
+int get_mouse_button(game_t *game, int button) { return glfwGetMouseButton(game->window, button); }
 double sign(double x) { if (x > 0) return 1; if (x < 0) return -1; return 0; }
 double norm2d(double x, double y) {return sqrt(x*x+y*y);}
 
@@ -92,10 +93,10 @@ void game_run(game_t *game) {
 		// glfwSetCursorPos(window, x*max_d/d, y*max_d/d);
 		
 		mouse_x = x;
-		mouse_y = -y;
+		mouse_y = window_height - y;
 
-		game->update_callback();
-		game->draw_callback();
+		game->update_callback(game);
+		game->draw_callback(game);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
