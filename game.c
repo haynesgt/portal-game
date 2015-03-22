@@ -65,7 +65,7 @@ void game_init(game_t *game) {
 	glEnable(GL_POLYGON_SMOOTH);
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	glLineWidth(1.25);
+	glLineWidth(1.5);
 
 	resize(window, window_width, window_height);
 	glClearColor(1, 1, 1, 1);
