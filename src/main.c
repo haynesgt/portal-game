@@ -1,3 +1,5 @@
+/* A simple 2d portal demo. Created by Gavin Haynes, 2015. Send me a message on github at https://github.com/haynesgt if you make use of my code. */
+
 #include <math.h>
 #include "game.h"
 #include "map.h"
@@ -223,6 +225,10 @@ void draw(game_t *game) {
 }
 
 int main(int argc, char *argv[]) {
+	if (argc < 2) {
+		fprintf(stderr, "Usage: %s <map file>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 	game_t g;
 	g.width = 640;
 	g.height = 480;
@@ -241,8 +247,7 @@ int main(int argc, char *argv[]) {
 	portal2 = &portals[1];
 
 	char *mapname;
-	if (argc < 2) mapname = "gearmap.map";
-	else mapname = argv[1];
+	mapname = argv[1];
 
 	map_read(&map, mapname);
 	game_init(&g);

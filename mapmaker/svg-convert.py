@@ -1,3 +1,5 @@
+#/usr/bin/python
+
 import xml.dom.minidom as md
 import sys
 
